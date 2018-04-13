@@ -19,11 +19,17 @@ r_dat <- data.frame(dat = rnorm(n = 600, mean = 372, sd = 50), sample = "A")
 ggplot(data = r_dat, aes(x = dat)) +
   geom_density()
 
-######## HISTOGRAM
+
+
+
+##########################Histogram#######
 ggplot(data = r_dat, aes(x = dat), fill= sample) +
   geom_histogram(aes(fill = sample), position = "dodge", binwidth = 100) +
   labs(title = "Histogram of  the data")
-##########
+#########################Histogram########
+
+
+
 
 ## The mean
 # sum of all the values
@@ -35,12 +41,6 @@ r_dat %>%
             r_n = n(),
             r_mean = r_sum/r_n,
             r_mean_func = mean(dat))
-
-# The median
-# Slice is to select a certain row
-r_dat %>%
-  slice(dat, (nrow))
-  summarise(r_median = dat[(nrow(dat)+1)/2)])
 
 # Brute force with baseR
 r_dat$dat[(length(r_dat$dat)+1)/2]
@@ -87,6 +87,10 @@ chick %>%
             quart_3 = quantile(weight, 0.75),
             max_weight = max(weight))
 
+ggplot(chick, aes(x = Time, y = weight)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+
 # Visualisation -----------------------------------------------------------
 # Load our libraries
 # These few packages contain most functions necessary
@@ -100,6 +104,19 @@ library(viridis)
 # Stacked bar graph
 
 # Create the count of qualitative data
+
+
+
+
+##########################Boxplot#######
+iris_graph <- iris
+ggplot(data = iris, aes(x = Species, y = Sepal.Width)) +
+  geom_boxplot(aes(fill = Species))
+##########################Boxplot#######
+
+
+
+
 iris_count <- iris %>%
   count(Species) %>% 
   mutate(prop = n/sum(n))
@@ -110,16 +127,13 @@ sa_time <- read.csv("SA_time.csv")
 
 # Edit our time
 sa_time <- sa_time %>% 
-  mutate(human = seq(1, n(), 1),
-         geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
-                 rep("Joburg", 2)))
+  mutate(human = seq(1, n(), 1))
+         #geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
+                #rep("Joburg", 2)))
 
 sa_long <- sa_time %>% 
   gather(key = "time_type", value = "minutes", -human)
 # overwriting the raw data with a copy that has an extra column that we created
-
-ggplot(data = sa_long, aes(x = "", y = time_type)) +
-  geom_bar()
 
 sa_count <- sa_long %>%
   count(time_type) %>% 
@@ -131,6 +145,18 @@ ggplot(data = sa_count, aes(x = "", y = n, fill= time_type)) +
        x = NULL, y = "Count") +
   theme_minimal()
 
+ggplot(sa_clean, aes(x = minutes, y = human, colour = time_type)) +
+  geom_point() +
+  geom_smooth()
+
+
+
+##########################Bar#######
+ggplot(sa_clean, aes(x = minutes, colour = time_type)) +
+  geom_bar(aes(fill = time_type), position = "dodge", binwidth = 100) 
+##########################Bar#######
+
+
 
 # Making a pie chart
 
@@ -139,7 +165,7 @@ ggplot(data = sa_count, aes(x = "", y = n, fill= time_type)) +
   labs(title = "Pie chart", subtitle = "but why though?",
        x = NULL, y = NULL) +
   coord_polar("y", start = 0) +
-  scale_fill_brewer(palette = "salmon") #### Using a different palette
+  scale_fill_brewer() #### Using a different palette
 
 # Histogram
 ggplot(data = sa_long, aes(x = minutes)) +
@@ -218,3 +244,4 @@ ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
 # cape town- the more they think just now is the less they have now now
 # JH and PE similar relationships
 # George is just the same
+
