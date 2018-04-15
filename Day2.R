@@ -19,18 +19,6 @@ r_dat <- data.frame(dat = rnorm(n = 600, mean = 372, sd = 50), sample = "A")
 ggplot(data = r_dat, aes(x = dat)) +
   geom_density()
 
-
-
-
-##########################Histogram#######
-ggplot(data = r_dat, aes(x = dat), fill= sample) +
-  geom_histogram(aes(fill = sample), position = "dodge", binwidth = 100) +
-  labs(title = "Histogram of  the data")
-#########################Histogram########
-
-
-
-
 ## The mean
 # sum of all the values
 # divide by
@@ -105,18 +93,6 @@ library(viridis)
 
 # Create the count of qualitative data
 
-
-
-
-##########################Boxplot#######
-iris_graph <- iris
-ggplot(data = iris, aes(x = Species, y = Sepal.Width)) +
-  geom_boxplot(aes(fill = Species))
-##########################Boxplot#######
-
-
-
-
 iris_count <- iris %>%
   count(Species) %>% 
   mutate(prop = n/sum(n))
@@ -145,18 +121,6 @@ ggplot(data = sa_count, aes(x = "", y = n, fill= time_type)) +
        x = NULL, y = "Count") +
   theme_minimal()
 
-ggplot(sa_clean, aes(x = minutes, y = human, colour = time_type)) +
-  geom_point() +
-  geom_smooth()
-
-
-
-##########################Bar#######
-ggplot(sa_clean, aes(x = minutes, colour = time_type)) +
-  geom_bar(aes(fill = time_type), position = "dodge", binwidth = 100) 
-##########################Bar#######
-
-
 
 # Making a pie chart
 
@@ -178,6 +142,11 @@ sa_clean <- sa_long %>%
 ggplot(data = sa_clean, aes(x = minutes)) +
   geom_histogram(aes(fill = time_type), position = "dodge") +
   facet_wrap(~time_type, ncol = 1, scales = "free_x")
+
+ggplot(sa_clean, aes(x = minutes, y = human, colour = time_type)) +
+  geom_point() +
+  geom_smooth()
+
 
 # Realtive proportion Histogram
 ggplot(data = sa_clean, aes(x = minutes)) +
@@ -245,3 +214,73 @@ ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
 # JH and PE similar relationships
 # George is just the same
 
+################################## Additionl analysis############################
+
+
+
+
+
+# Additional analysis
+# graphs'
+# Correlations
+
+ggplot(data = r_dat, aes(x = dat), fill= sample) +
+  geom_histogram(aes(fill = sample), position = "dodge", binwidth = 100) +
+  labs(title = "Histogram of  the data")
+
+
+#kurtosis of the tails of the distribution
+library(e1071)
+stats_summary <- r_dat %>% 
+  summarise(mean_dt = mean(dat),
+            median_dt = median(dat),
+            skew_dt = skewness(dat),
+            kurt_dt = kurtosis(dat))
+
+dt_summary <- r_dat %>% 
+  summarise(dt_mean = mean(dat),
+            dt_median = median(dat),
+            dt_var = var(dat),
+            dt_sd = sd(dat),
+            dt_min = min(dat),
+            dt_quart1 = quantile(dat, 0.25),
+            dt_quart2 = quantile(dat, 0.50),
+            dt_quart3 = quantile(dat, 0.75))
+dt_summary
+
+iris_graph <- iris
+ggplot(data = iris, aes(x = Species, y = Sepal.Width)) +
+  geom_boxplot(aes(fill = Species))
+
+ggplot(sa_clean, aes(x = minutes, colour = time_type)) +
+  geom_bar(aes(fill = time_type), position = "dodge", binwidth = 100) 
+
+#sa_clean
+mean_sd <- sa_clean %>% 
+  group_by(time_type) %>% 
+  summarise(mn.min = mean(minutes),
+            sd.min = sd(minutes))
+
+ggplot(mean_sd, aes(x = time_type, y = mn.min)) +
+  geom_col(aes(fill = time_type)) +
+  geom_errorbar(aes(ymin = mn.min - sd.min, 
+                    ymax = mn.min + sd.min))+
+  scale_fill_brewer(palette = "Spectral") +
+  labs(x = "Time type", y = "Average minutes") 
+
+
+# Pearsons correlations
+ cor.test(sa_time$now_now, sa_time$just_now, method = "pearson",
+          conf.level = 0.95)
+ 
+# Pearson's product-moment correlation
+
+# data:  sa_time$now_now and sa_time$just_now
+# t = -0.046516, df = 18, p-value = 0.9634
+# alternative hypothesis: true correlation is not equal to 0
+# 95 percent confidence interval:
+# -0.4512947  0.4336614
+# sample estimates:
+# cor 
+# -0.01096334 
+ 
