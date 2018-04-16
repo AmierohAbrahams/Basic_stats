@@ -221,12 +221,9 @@ sa_time <- sa_time %>%
          geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
                  rep("Joburg", 2)))
 
-# Testing relationships
 stat_data <- sa_time %>%
   group_by(now_now, geo) %>%
   summarise()
-
-# Creating the graph 
 
 ggplot(stat_data, aes(x = geo, y = now_now, fill = geo)) +
   geom_col(aes(fill = geo), position = "dodge", width = 0.10) +
