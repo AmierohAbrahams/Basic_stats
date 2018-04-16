@@ -216,7 +216,22 @@ ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
 
 ################################## Additionl analysis############################
 
+sa_time <- sa_time %>% 
+  mutate(human = seq(1, n(), 1),
+         geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
+                 rep("Joburg", 2)))
 
+# Testing relationships
+stat_data <- sa_time %>%
+  group_by(now_now, geo) %>%
+  summarise()
+
+# Creating the graph 
+
+ggplot(stat_data, aes(x = geo, y = now_now, fill = geo)) +
+  geom_col(aes(fill = geo), position = "dodge", width = 0.10) +
+  labs(x = "Location",y = "just now",title = "Relationship between location and just now")
+# People in JHB take the least time 
 
 
 
@@ -237,6 +252,7 @@ stats_summary <- r_dat %>%
             skew_dt = skewness(dat),
             kurt_dt = kurtosis(dat))
 
+# Stats analysis
 dt_summary <- r_dat %>% 
   summarise(dt_mean = mean(dat),
             dt_median = median(dat),
