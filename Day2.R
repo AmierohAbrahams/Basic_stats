@@ -99,7 +99,7 @@ iris_count <- iris %>%
 
 # Load SA time data
 # Use tab in the " after read.csv
-sa_time <- read.csv("SA_time.csv")
+sa_time <- read_csv("SA_time.csv")
 
 # Edit our time
 sa_time <- sa_time %>% 
@@ -185,7 +185,7 @@ sa_summary_stats <- sa_clean %>%
 # Plot these
 ggplot(data = sa_clean, aes(x = time_type, y = minutes)) +
   geom_boxplot(aes(fill = time_type), notch = TRUE) +
-  geom_point(date = sa_summary_stats,  size = 6, shape = 18,
+  geom_point(data = sa_summary_stats,  size = 6, shape = 18,
              aes(y = time_type_mean, colour = "goldenrod"))
 
 
@@ -203,6 +203,13 @@ ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
   geom_point() +
   coord_equal(xlim = c(0, 60), ylim = c(0,60))
 
+# Add geo column
+sa_time <- sa_time %>% 
+  mutate(human = seq(1, n(), 1),
+         geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
+                 rep("Joburg", 2)))
+
+
 # Areas and adding trend
 ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
   geom_point(aes(colour = geo)) +
@@ -215,11 +222,6 @@ ggplot(data = sa_time, aes(y = now_now, x = just_now)) +
 # George is just the same
 
 ################################## Additionl analysis############################
-
-sa_time <- sa_time %>% 
-  mutate(human = seq(1, n(), 1),
-         geo = c(rep(c("Cape Town", "George", "PE"), times = 6),
-                 rep("Joburg", 2)))
 
 stat_data <- sa_time %>%
   group_by(now_now, geo) %>%
