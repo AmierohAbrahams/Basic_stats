@@ -229,6 +229,8 @@ ggplot(data = pH, aes(x = Site, y = pH)) +
   geom_boxplot(aes(fill = Site), outlier.colour = "red") + 
   labs(y = "pH") +
   theme1()
+
+
 library(plyr)
 pHStats <- ddply(pH, .(Site), summarize, 
                  pH_mean = mean(pH, na.rm = TRUE),
