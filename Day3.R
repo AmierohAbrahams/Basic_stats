@@ -196,7 +196,7 @@ compare_means(value ~ site, data = ecklonia_sub, method = "t.test", var.equal = 
 # Exercise 1
 
 # There is a significant difference in the pH of the water upstream and downstream of the river  
-pH <- read_csv("Day3/pH.csv")
+pH <- read_csv("pH.csv")
 graph1 <- ggplot(data = pH, aes(x = pH, fill = Site)) +
   geom_histogram(position = "dodge", binwidth = 1, alpha = 0.8) +
   geom_density(aes(y = 1*..count.., fill = Site), colour = NA, alpha = 0.4) +
@@ -206,29 +206,32 @@ graph1
 ggplotly(graph1)
 
 pH %>% 
-group_by(Site) %>% 
+  group_by(Site) %>% 
   summarise(norm_dat = as.numeric(shapiro.test(pH)[2]))
 
 
 t.test(pH ~ Site, data = pH, var.equal = TRUE)
-# Two Sample t-test
+#Two Sample t-test
+
 # data:  pH by Site
-# t = -3.5835, df = 18, p-value = 0.002124
+# t = -1.3981, df = 18, p-value = 0.1791
 # alternative hypothesis: true difference in means is not equal to 0
 # 95 percent confidence interval:
-#  -1.0994752 -0.2867632
-# sample estimates:
-#  mean in group down-stream   mean in group up-stream 
-# 5.620889                  6.314008 
+#  -2.4120496  0.4845072
+#sample estimates:
+# mean in group down-stream   mean in group up-stream 
+# 5.620889                  6.584660 
 
-# Using a T-test, there is a significant difference 
+# Using a T-test, there is no significant difference 
 # in pH at the different levels of the river
-# T = -3.5835; df = 18;P = 0.002
+# T = -1.3981; df = 18;P = 0.1791
 
 ggplot(data = pH, aes(x = Site, y = pH)) + 
   geom_boxplot(aes(fill = Site), outlier.colour = "red") + 
   labs(y = "pH") +
   theme1()
+
+
 
 
 library(plyr)
