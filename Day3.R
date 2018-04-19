@@ -146,6 +146,7 @@ t.test(dat ~ sample, data = r_two, var.equal = TRUE, alternative = "less")
 # or greater
 t.test(dat ~ sample, data = r_two, var.equal = TRUE, alternative = "greater")
 
+# RWS: SJog! Flippin nice one!
 theme1 <- function(base_size = 10, base_family = "serif"){
   theme_bw(base_size = base_size, base_family = base_family) %+replace%
     theme(axis.title = element_text(size = 10),
@@ -233,11 +234,22 @@ ggplot(data = pH, aes(x = Site, y = pH)) +
 
 
 
+# library(plyr)
+# pHStats <- ddply(pH, .(Site), summarize, 
+#                  pH_mean = mean(pH, na.rm = TRUE),
+#                  pH_sd = sd(pH, na.rm = TRUE))
+# RWS: The use of the "plyr" package is discouraged 
+# because it loads a lot of functions that change the way R works
+# in unexpected ways that also interferes with other packages.
+# This is why "dplyr" was created.
+# It performs the same calculations but in a different way
+# that plays more nicely with R more broadly.
+# Here is how to perform the same task:
+pHStats <- pH %>% 
+  group_by(Site) %>% 
+  summarise(pH_mean = mean(pH, na.rm = TRUE),
+            pH_sd = sd(pH, na.rm = TRUE))
 
-library(plyr)
-pHStats <- ddply(pH, .(Site), summarize, 
-                 pH_mean = mean(pH, na.rm = TRUE),
-                 pH_sd = sd(pH, na.rm = TRUE))
 ggplot(data = pHStats, aes(x = Site, y = pH_mean)) +
   geom_bar(stat="identity", aes (fill = Site)) +
   geom_errorbar(aes(ymin=pH_mean-pH_sd, ymax=pH_mean+pH_sd), width=.1) +
