@@ -44,9 +44,11 @@ t.test(weight ~ Diet, data = chicks_sub)
 # Null hypothesis: there is no difference in the chicken mass at 21days after being fed
 # the four different diets
 
-
-chicks <- aov(weight ~ Diet, data = filter(chicks, Time == 21))
-summary(chicks)
+# RWS: You accidentally named the ANOVA results the same as your dataframe
+# This overwrote the data so the following lines that used "chicks"
+# WOuld not run correctly
+chicks_aov <- aov(weight ~ Diet, data = filter(chicks, Time == 21))
+summary(chicks_aov)
 
 chicks_21 <- chicks %>% 
   filter(Time == 21)
@@ -108,7 +110,7 @@ ggplot(data = chicks_tukey, aes(x = pairs, y = diff)) +
 
 chicks_0_21 <- ChickWeight %>% 
   filter(Time %in% c(0, 2, 21))
-ggplot(data = chicks_0_21, aes(x = Time, y = weight)) +
+ggplot(data = chicks_0_21, aes(x = as.factor(Time), y = weight)) +
   geom_boxplot(notch = T, aes(fill = as.factor(Time)))
 # Run an anova
 summary(aov(weight ~ as.factor(Time), data = chicks_0_21))
@@ -143,7 +145,7 @@ chicks_mean <- ChickWeight %>%
 # effect of diet is not consistant all the time
 # when in the chicken life cycle is it looking at the effect
 
-ggplot(data = ChickWeight, aes(x = Time, y = weight, colour = Diet)) +
+ggplot(data = chicks_mean, aes(x = Time, y = weight_mean, colour = Diet)) +
   geom_line(size = 2) +
   geom_point(shape = 15, size = 5)
 
