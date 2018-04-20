@@ -1,7 +1,5 @@
 # An0va exercise
 # Some more exercise
-
-
 # Loading Library ---------------------------------------------------------
 
 library(tidyverse)
@@ -299,7 +297,20 @@ corrplot(ecklonia_pearson, method = "circle")
 # all of the relaionships are iether positive or negative
 # negative corealtion- dot will be red(one variable increaseand another decrease)
 
+# Using pearson
+library(plotly)
+try1 <- plot_ly(z = ecklonia_pearson, type = "heatmap", col = brewer.pal(9, "Blues"),
+                        x = c("D", "FM", "FL","PBL","SM", "PBW"),
+                        y = c("PBW", "SM", "PBL", "FL", "FM", "D"))
+try1
+
+library("RColorBrewer")
+my_palette <- colorRampPalette(c("Red", "yellow","green"))(n = 226)
+ecklonia_matrix <- data.matrix(ecklonia)
+ecklonia_heatmap <- heatmap(ecklonia_matrix, Rowv=NA, Colv=NA, col = my_palette, scale="column", margins=c(5,10))
 
 
-
+# This example is already ina data format and thus can be used
+# Ecklonia heatmap using the pearson data
+ecklonia_heatmap <- heatmap(ecklonia_pearson,Rowv=NA, Colv=NA, col = my_palette, scale="column", margins=c(5,10), main = "Correlation Matrix")
 
