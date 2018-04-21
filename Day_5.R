@@ -9,7 +9,9 @@ library(Rmisc)
 snakes <- read_csv("snakes.csv") %>% 
   mutate(day = as.factor(day))
 
-
+ggplot(data = snakes, aes(x = openings)) +
+  geom_histogram(aes(fill = day), position = "dodge") +
+  facet_wrap(~day, ncol = 1, scales = "free_x")
 # Manipulate the data -----------------------------------------------------
 snakes$day = as.factor(snakes$day)
 
@@ -19,6 +21,9 @@ snakes_summary <- snakes %>%
   summarise(mean_openings = mean(openings),
             sd_openings = sd(openings))
 
+ggplot(data = snakes, aes(x = openings)) +
+  geom_density(aes(fill = day)) +
+  labs(x = "Data", y = "Count")
 # Formulate the hypothesis ------------------------------------------------
 # Ho- precise expcttion, stating no difference
 # H1 - if show a difference 
@@ -44,6 +49,9 @@ ggplot(data = snakes, aes(x = day, y = openings)) +
                size = 2.0, linetype = "solid", show.legend = F) +
   geom_boxplot(aes(fill = day), alpha = 0.6, show.legend = F) + 
   geom_jitter(width = 0.05)
+
+
+
 # dots not clumped, evenly spread, data isnt normal in terms of kurtosis
 # where is there a significant difference, is there a 95% probability that they are real 
 # or is it just by chance
@@ -54,12 +62,11 @@ ggplot(data = snakes, aes(x = day, y = openings)) +
 # H0: There is no difference between days in terms of the number of openings at which the snakes habituate.
 snakes.day.aov <- aov(openings ~ day, data = snakes)
 summary(snakes.day.aov)
+
+
 # less 0.05- there is a significnt difference, so we reject null hypoth
 # sum of squares- varience
 # still large amount of variation to reduce residual sum of squars than can do tukey
-# 
-TukeyHSD()
-
 
 snakes.aov <- aov(openings ~ day + snake, data = snakes)
 summary(snakes.aov)
@@ -87,6 +94,10 @@ library(ggpubr)
 
 moths <- read_csv("moth_traps.csv") %>% 
   gather(key = "trap", value = "count", - Location)
+
+ggplot(data = moths, aes(x = count)) +
+  geom_density(aes(fill = trap)) +
+  labs(x = "Data", y = "Count")
 
 # Summarise the data ------------------------------------------------------
 
@@ -147,18 +158,14 @@ summary(moth.trap.aov)
 moths.all.aov <- aov(count ~ Location + trap, data = moths)
 summary(moths.all.aov)
 
-# Testing assumptions 
-
 # First visualise normality of data
 
 moths.residuals <- residuals(moths.all.aov)
 hist(moths.residuals)
 
-# Visualise homoscedasticity
+# Visualise 
 
 plot(fitted(moths.all.aov), residuals(moths.all.aov))
-
-# Apply tukey test 
 
 moths.loc.tukey <- TukeyHSD(moths.all.aov, which = "Location")
 plot(moths.loc.tukey)
