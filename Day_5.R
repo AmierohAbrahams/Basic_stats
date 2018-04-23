@@ -3,7 +3,7 @@
 # Loading Library ---------------------------------------------------------
 
 library(tidyverse)
-library(Rmisc)
+# library(Rmisc) # This replaces function from the dplyr package...
 
 # Load the data -----------------------------------------------------------
 snakes <- read_csv("snakes.csv") %>% 
@@ -40,7 +40,7 @@ ggplot(data = snakes, aes(x = openings)) +
 # Visualising the data
 # Creating SE and Ci
 
-snakes.summary2 <- summarySE(data = snakes,
+snakes.summary2 <- Rmisc::summarySE(data = snakes,
                              measurevar = "openings",
                              groupvars = c("day"))
 
@@ -96,7 +96,7 @@ moths <- read_csv("moth_traps.csv") %>%
   gather(key = "trap", value = "count", - Location)
 
 ggplot(data = moths, aes(x = count)) +
-  geom_density(aes(fill = trap)) +
+  geom_density(aes(fill = trap), alpha = 0.3) +
   labs(x = "Data", y = "Count")
 
 # Summarise the data ------------------------------------------------------
@@ -118,11 +118,11 @@ moth_trap_summary <- moths %>%
 
 #  Calculate SE & CI ------------------------------------------------------
 
-moth_loc_summary_2 <- summarySE(data = moths,
+moth_loc_summary_2 <- Rmisc::summarySE(data = moths,
                                 measurevar = "count",
                                 groupvars = c("Location"))
 
-moth_trap_summary_2 <- summarySE(data = moths,
+moth_trap_summary_2 <- Rmisc::summarySE(data = moths,
                                  measurevar = "count",
                                  groupvars = c("trap"))
 
@@ -145,6 +145,7 @@ Final <- ggarrange(Location, Trap,
                    labels = c("Location", "Trap"),
                    common.legend = TRUE)
 Final
+# RWS: Very nice!
 # Test the hypothesis -----------------------------------------------------
 
 moth.loc.aov <- aov(count ~ Location, data = moths)
@@ -211,10 +212,10 @@ summary(faithful_lm)
 # No signifcant difference in y intercept fronm o
 # alternative is accepted i this case
 
-slope <- round(eruption.lm$coef[2], 3)
+slope <- round(faithful_lm$coef[2], 3)
 # p.val <- round(coefficients(summary(eruption.lm))[2, 4], 3) # it approx. 0, so...
 p.val = 0.001
-r2 <- round(summary(eruption.lm)$r.squared, 3)
+r2 <- round(summary(faithful_lm)$r.squared, 3)
 
 ggplot(data = faithful, aes(x = waiting, y = eruptions)) +
   geom_point() +
@@ -286,7 +287,7 @@ summary(try1)
 # making ordinal values
 # 
 ecklonia$length <- as.numeric(cut((ecklonia$stipe_length+ecklonia$frond_length), 3))
-cor.test(ecklonia$length, ecklonia$stipe_diameter, method = "Spearman")
+cor.test(ecklonia$length, ecklonia$stipe_diameter, method = "spearman")
 cor.test(ecklonia$length, ecklonia$digits)
 
 # Kendall experiment ------------------------------------------------------
@@ -305,13 +306,13 @@ corrplot(ecklonia_pearson, method = "circle")
 # negative corealtion- dot will be red(one variable increaseand another decrease)
 
 # Using pearson
+library("RColorBrewer")
 library(plotly)
 try1 <- plot_ly(z = ecklonia_pearson, type = "heatmap", col = brewer.pal(9, "Blues"),
                         x = c("D", "FM", "FL","PBL","SM", "PBW"),
                         y = c("PBW", "SM", "PBL", "FL", "FM", "D"))
 try1
 
-library("RColorBrewer")
 my_palette <- colorRampPalette(c("Red", "yellow","green"))(n = 226)
 ecklonia_matrix <- data.matrix(ecklonia)
 ecklonia_heatmap <- heatmap(ecklonia_matrix, Rowv=NA, Colv=NA, col = my_palette, scale="column", margins=c(5,10))
@@ -323,7 +324,7 @@ ecklonia_heatmap <- heatmap(ecklonia_pearson,Rowv=NA, Colv=NA, col = my_palette,
 
 library(reshape2)
 melted_ecklonia <- melt(ecklonia_pearson)
-ggplot(melted_ecklonia, aes(x = X1, y = X2, fill = value)) +
+ggplot(melted_ecklonia, aes(x = Var1, y = Var2, fill = value)) +
   geom_tile() +
   scale_fill_gradient() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1,
