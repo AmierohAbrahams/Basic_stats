@@ -321,3 +321,10 @@ ecklonia_heatmap <- heatmap(ecklonia_matrix, Rowv=NA, Colv=NA, col = my_palette,
 # Ecklonia heatmap using the pearson data
 ecklonia_heatmap <- heatmap(ecklonia_pearson,Rowv=NA, Colv=NA, col = my_palette, scale="column", margins=c(5,10), main = "Correlation Matrix")
 
+library(reshape2)
+melted_ecklonia <- melt(ecklonia_pearson)
+ggplot(melted_ecklonia, aes(x = X1, y = X2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1,
+                                   size = 12, hjust = 1))
