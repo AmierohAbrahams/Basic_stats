@@ -1,0 +1,21 @@
+Site,pH, Day
+down-stream,5.444444, 1
+down-stream,5.1, 2
+down-stream,5.0,3
+down-stream,5.444444, 4
+down-stream,5.9,5
+down-stream,5.5,6
+down-stream,5.1,7
+down-stream,6.3,8
+down-stream,6.0,9
+down-stream,6.42,10
+up-stream,10.0,1
+up-stream,5.04,2
+up-stream,6.7466,3
+up-stream,6.85, 4
+up-stream,6.76,5
+up-stream,5.17,6
+up-stream,10.18,7
+up-stream,6.69,8
+up-stream,4.20,9
+up-stream,4.21,10
