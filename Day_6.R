@@ -196,6 +196,15 @@ iris %>%
 
 kruskal.test(Petal.Width ~ Species, data = iris)
 
+graph2 <- ggplot(data=iris, aes(x= Petal.Width))+
+  geom_histogram(binwidth=0.2, color="black", aes(fill= Species)) + 
+  xlab("Petal Width (cm)") +  
+  ylab("Frequency") + 
+  ggtitle("Histogram of Petal Width")+
+  geom_vline(data=iris, aes(xintercept = mean(Petal.Width)),linetype = "dashed",color= "salmon")
+
+graph2
+
 
 
 
