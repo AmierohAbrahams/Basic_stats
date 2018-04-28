@@ -100,3 +100,17 @@ summary(Iris.ano)
 TukeyHSD(Iris.ano, conf.level = 0.95)
 
 # THere is a difference thua reject null hypoth
+
+
+
+## Additional graphs (2018/04/28)
+
+
+graph1 <- ggplot(data=iris, aes(x= Petal.Length))+
+  geom_histogram(binwidth=0.2, color="black", aes(fill= Species)) + 
+  xlab("Petal Length (cm)") +  
+  ylab("Frequency") + 
+  ggtitle("Histogram of Petal Length")+
+  geom_vline(data=iris, aes(xintercept = mean(Petal.Length)),linetype = "dashed",color= "salmon")
+
+graph1
