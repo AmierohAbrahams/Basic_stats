@@ -190,11 +190,6 @@ iris %>%
   summarise(norm_dat = as.numeric(shapiro.test(Petal.Width)[2]))
 
 
-ggplot(data = sa_clean, aes(x = time_type, y = minutes)) +
-  geom_boxplot(aes(fill = time_type), notch = TRUE) +
-  geom_point(data = sa_summary_stats,  size = 6, shape = 18,
-             aes(y = time_type_mean, colour = "goldenrod"))
-
 # we find that some of the species have non-normal data -------------------
 
 # do a Kruskal-Wallis test in stead o an ANOVA
