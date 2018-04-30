@@ -13,6 +13,9 @@ library(tidyverse)
 install.packages("rcompanion")
 library(rcompanion)
 
+
+# Data --------------------------------------------------------------------
+
 Input <- ("
           Student  Sex     Teacher  Steps  Rating
           a        female  Jacob    8000   7
@@ -43,6 +46,9 @@ Input <- ("
           z        male    Donald    7000   7
           ")
 
+
+# Creating a data frame ---------------------------------------------------
+
 data <- read.table(textConnection(Input),header = TRUE)
 summary(data)
 groupwiseMean(Steps ~ 1,data = data, conf = 0.95, digits = 3)
@@ -64,10 +70,6 @@ dat1 <- groupwiseMean(Steps ~ Teacher + Sex, data = data, conf = 0.95,digits = 3
 ggplot(data = data, aes(x = Rating)) +
   geom_density(aes(fill = Sex)) +
   labs(x = "Data", y = "Count")
-
-
-
-
 # Create the graph --------------------------------------------------------
 library(ggplot2)
 
@@ -205,6 +207,63 @@ graph2 <- ggplot(data=iris, aes(x= Petal.Width))+
 
 graph2
 
+# Exercise
 
 
+# Loading the data --------------------------------------------------------
+
+chickies <- ChickWeight
+
+
+# Notes to remember -------------------------------------------------------
+
+# If the p-value is < 0.05 then data is considered non-Normal
+# If the p-value is > 0.05 then data is considered Normal
+# differ from normal do the KWallace test
+
+
+# Analysis to chickweight dataset -----------------------------------------
+
+chickies %>% 
+  filter(Time == 14) %>% 
+  summarise(weight = as.numeric(shapiro.test(weight)[2]))
+# p value is greater than 0.05
+# Not normal data: day14
+
+chickies %>% 
+  filter(Time == 2) %>% 
+  summarise(weight = as.numeric(shapiro.test(weight)[2]))
+# p values is less than 0.05
+# Normal data: day 2
+
+
+# Exercise 2: Transforming the data using the different func --------------
+
+chickies_data <- chickies %>%
+  mutate(log10 = log10(weight)) %>% 
+  mutate(log = log(weight)) %>%
+  mutate(cuberoot = (weight)) %>% 
+  mutate(sqrt = sqrt(weight)) 
+
+# Plot histogram of all of the columns ------------------------------------
+
+hist1 <- ggplot(data = chickies_data, aes(x = log10, fill = Diet))+
+  geom_histogram(aes(fill = Diet), position = "dodge")
+hist1
+hist2 <- ggplot(data = chickies_data, aes(x = log, fill = Diet))+
+  geom_histogram(aes(fill = Diet), position = "dodge")
+
+hist3 <- ggplot(data = chickies_data, aes(x = cuberoot, fill = Diet))+
+  geom_histogram(aes(fill = Diet), position = "dodge")
+
+hist4 <- ggplot(data = chickies_data, aes(x = sqrt, fill = Diet))+
+  geom_histogram(aes(fill = Diet), position = "dodge")
+
+# Loading the library -----------------------------------------------------
+
+library(ggpubr)
+# needed in order to use ggarrange
+
+final_hist <- ggarrange(hist1, hist2, hist3, hist4)
+final_hist
 
