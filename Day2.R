@@ -188,7 +188,7 @@ ggplot(data = sa_clean, aes(x = time_type, y = minutes)) +
   geom_point(data = sa_summary_stats,  size = 6, shape = 18,
              aes(y = time_type_mean, colour = "goldenrod"))
 
-
+hhhhhhh
 # Relationships -----------------------------------------------------------
 # A basic scatter plot
 
